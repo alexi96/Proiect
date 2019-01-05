@@ -6,6 +6,8 @@
 
 using namespace std;
 
+#define DEBUG
+
 typedef unsigned char Byte;
 
 class Number {
@@ -23,13 +25,8 @@ public:
 
 	void Set(int index, int value);
 
-	unsigned int Length();
+	unsigned int Length() const;
 
 	friend ostream& operator<< (ostream& stream, const Number& number);
 };
 
-int numberOfTasks;
-int currentRank;
-int hostNameLength;
-char hostName[MPI_MAX_PROCESSOR_NAME];
-bool usingMpi = false;

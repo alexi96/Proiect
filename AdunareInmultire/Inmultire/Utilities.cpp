@@ -2,9 +2,10 @@
 
 Number::Number(const char* const str): length(strlen(str) / 2) {
 	this->data = new Byte[this->length];
+	int stringLength = this->length * 2;
 
-	for (unsigned int i = 0; i < this->length * 2; ++i) {
-		this->Set(i, str[i] - '0');
+	for (unsigned int i = 0; i < stringLength; ++i) {
+		this->Set(i, str[stringLength - 1 - i] - '0');
 	}
 }
 
@@ -47,14 +48,17 @@ void Number::Set(int index, int value) {
 	}
 }
 
-unsigned int Number::Length() {
-	return this->length;
+unsigned int Number::Length() const {
+	int res = this->length * 2;
+	res -= (*this)[res - 1] == 0;
+	return res;
 }
 
 ostream& operator<<(ostream& stream, const Number& number)
 {
-	for (unsigned int i = 0; i < number.length * 2; ++i) {
-		stream << number[i];
+	int len = number.Length();
+	for (unsigned int i = 0; i < len; ++i) {
+		stream << number[len - 1 - i];
 	}
 	return stream;
 }
