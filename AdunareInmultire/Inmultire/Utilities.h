@@ -6,8 +6,6 @@
 
 using namespace std;
 
-#define DEBUG
-
 typedef unsigned char Byte;
 
 class Number {
@@ -30,3 +28,27 @@ public:
 	friend ostream& operator<< (ostream& stream, const Number& number);
 };
 
+template<typename N>
+ostream& PrintAsNumber(N number, int len, ostream& stream = cout) {
+	int index = 0;
+	int t;
+	for (; index < len; ++index) {
+		t = (int) number[len - 1 - index];
+		if (t != 0) {
+			stream << t;
+			++index;
+			break;
+		}
+	}
+
+	if (index == len) {
+		stream << '0';
+		return stream;
+	}
+
+	for (; index < len; ++index) {
+		t = (int) number[len - 1 - index];
+		stream << t;
+	}
+	return stream;
+}

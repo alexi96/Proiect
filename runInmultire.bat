@@ -1,0 +1,1 @@
+mpiexec -n 2 AdunareInmultire\Debug\Inmultire.exe 1234 5678

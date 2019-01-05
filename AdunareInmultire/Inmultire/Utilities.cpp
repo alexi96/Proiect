@@ -1,11 +1,18 @@
 #include "Utilities.h"
 
-Number::Number(const char* const str): length(strlen(str) / 2) {
+Number::Number(const char* const string) {
+	int stringLength = strlen(string);
+	this->length = stringLength / 2;
+	if (stringLength % 2) {
+		this->length = (stringLength + 1) / 2;
+	}
 	this->data = new Byte[this->length];
-	int stringLength = this->length * 2;
+	for (int i = 0; i < this->length; ++i) {
+		data[i] = 0;
+	}
 
-	for (unsigned int i = 0; i < stringLength; ++i) {
-		this->Set(i, str[stringLength - 1 - i] - '0');
+	for (int i = 0; i < stringLength; ++i) {
+		this->Set(i, string[stringLength - 1 - i] - '0');
 	}
 }
 
@@ -50,15 +57,26 @@ void Number::Set(int index, int value) {
 
 unsigned int Number::Length() const {
 	int res = this->length * 2;
-	res -= (*this)[res - 1] == 0;
+	int t = (*this)[res - 1];
+	res -= t == 0;
 	return res;
 }
 
 ostream& operator<<(ostream& stream, const Number& number)
 {
+	int index = 0;
 	int len = number.Length();
+	int t;
 	for (unsigned int i = 0; i < len; ++i) {
-		stream << number[len - 1 - i];
+		t = (int) number[len - 1 - i];
+	
+		if (i == len - 1 && !t) {
+			break;
+		}
+
+		stream << t;
 	}
 	return stream;
 }
+
+

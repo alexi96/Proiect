@@ -1,10 +1,2 @@
 ﻿  main.cpp
-d:\alex\master\programare paralela\proiectprogramareparalela\adunareinmultire\inmultire\main.cpp(66): warning C4018: '<': signed/unsigned mismatch
-d:\alex\master\programare paralela\proiectprogramareparalela\adunareinmultire\inmultire\main.cpp(113): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
-  Compiling...
-  Utilities.cpp
-d:\alex\master\programare paralela\proiectprogramareparalela\adunareinmultire\inmultire\utilities.cpp(7): warning C4018: '<': signed/unsigned mismatch
-d:\alex\master\programare paralela\proiectprogramareparalela\adunareinmultire\inmultire\utilities.cpp(60): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
   Inmultire.vcxproj -> D:\Alex\Master\Programare paralela\ProiectProgramareParalela\AdunareInmultire\Debug\Inmultire.exe
