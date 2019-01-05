@@ -1,1 +1,1 @@
-mpiexec -n 2 Proiect\Debug\Proiect.exe
+mpiexec -n 2 AdunareInmultire\Debug\AdunareInmultire.exe

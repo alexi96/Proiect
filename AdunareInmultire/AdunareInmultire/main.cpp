@@ -4,6 +4,8 @@
 #pragma comment (lib, "msmpi.lib")
 
 int main(int argc, char *argv[]) {
+	printf("Asta este programul meu!\n");
+
 	int  numtasks, rank, len, rc;
 	char hostname[MPI_MAX_PROCESSOR_NAME];
 
@@ -21,4 +23,6 @@ int main(int argc, char *argv[]) {
 	/*******  do some work *******/
 
 	MPI_Finalize();
+
+	printf("Asta este programul meu!\n");
 }
