@@ -3,6 +3,7 @@
 #include <mpi.h>
 #include <string.h>
 #include <iostream>
+#include <math.h>
 
 using namespace std;
 
@@ -26,6 +27,29 @@ public:
 	unsigned int Length() const;
 
 	friend ostream& operator<< (ostream& stream, const Number& number);
+};
+
+class MatrixPart {
+private:
+	Byte * data;
+	unsigned int length;
+	unsigned int offset;
+
+	MatrixPart& operator=(const MatrixPart& copy);
+public:
+	MatrixPart(const unsigned int length, const unsigned int offset);
+
+	MatrixPart(const MatrixPart& copy);
+
+	~MatrixPart();
+
+	unsigned int Length() const;
+
+	Byte& operator[](const int index) const;
+
+	MatrixPart& operator+(const MatrixPart& copy) const;
+
+	friend ostream& operator<< (ostream& stream, const MatrixPart& number);
 };
 
 template<typename N>

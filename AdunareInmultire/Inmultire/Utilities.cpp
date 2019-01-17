@@ -79,4 +79,54 @@ ostream& operator<<(ostream& stream, const Number& number)
 	return stream;
 }
 
+MatrixPart::MatrixPart(const unsigned int length, const unsigned int offset) : length(length), offset(offset) {
+	this->data = new Byte[this->length];
 
+	for (unsigned int i = 0; i < this->length; ++i) {
+		this->data[i] = 0;
+	}
+}
+
+MatrixPart::MatrixPart(const MatrixPart& copy) : MatrixPart(copy.length, copy.offset) {
+	this->data = new Byte[this->length];
+	for (unsigned int i = 0; i < this->length; ++i) {
+		this->data[i] = copy[i];
+	}
+}
+
+MatrixPart& MatrixPart::operator=(const MatrixPart& copy) {
+	return *this;
+}
+
+MatrixPart::~MatrixPart() {
+	delete this->data;
+	this->data = nullptr;
+}
+
+unsigned int MatrixPart::Length() const {
+	return this->length;
+}
+
+Byte& MatrixPart::operator[](const int index) const {
+	return this->data[index];
+}
+
+MatrixPart& MatrixPart::operator+(const MatrixPart& copy) const {
+	int offsetDiference = abs(this->offset - copy.offset);
+	int length = max(this->length, copy.length) + offsetDiference;
+	MatrixPart res = (length, min(this->offset, copy.offset));
+
+
+}
+
+ostream& operator<<(ostream& stream, const MatrixPart& matrix)
+{
+	int index = 0;
+	int len = matrix.Length();
+	unsigned int t;
+	for (unsigned int i = 0; i < len; ++i) {
+		t = matrix[len - 1 - i];
+		stream << t;
+	}
+	return stream;
+}

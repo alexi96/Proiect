@@ -26,6 +26,54 @@ void GenerateMatrix(Byte** matrix, Number x, Number y, int rowStart, int length)
 	}
 }
 
+MatrixPart GenerateMatrixPart(Number& x, Number& y) {
+	int yLen = y.Length();
+	int xLen = x.Length();
+	int rows = y.Length() / numberOfTasks;
+	int offset = rows * currentRank;
+
+	Byte** matrix = new Byte*[rows]; //Consturim matricea de inmultire
+	for (int i = 0; i < yLen; ++i) {
+		matrix[i] = new Byte[xLen];
+		for (int j = 0; j < xLen; ++j) {
+			matrix[i][j] = y[currentRank * rows + i] * x[j];
+		}
+	}
+
+	DEBUG_MATRIX(matrix, rows, xLen);
+
+	MatrixPart res(xLen + yLen, rows);
+	int tr = 0;
+	int t;
+	int sum = 0;
+	int index = 0;
+	for (int col = 0; col < res.Length(); ++col) {
+		for (int row = 0; row < rows; ++row) {
+			if (col - row < 0 || col - row >= xLen) {
+				continue;
+			}
+
+			t = matrix[row][col - row];
+			res[col] += t;
+		}
+
+		res[col] += tr;
+		tr = res[col] / 10;
+		res[col] %= 10;
+	}
+
+	for (int i = 0; i < rows; ++i) {
+		delete matrix[i];
+		matrix[i] = nullptr;
+	}
+	delete matrix;
+	matrix = nullptr;
+
+	DEBUG(res);
+
+	return res;
+}
+
 int main(int argc, char** argv) {
 	int rc = MPI_Init(&argc, &argv);
 	usingMpi = rc == MPI_SUCCESS;
@@ -65,24 +113,26 @@ int main(int argc, char** argv) {
 
 	int xLen = x.Length();
 	int yLen = y.Length();
-
-	Byte** matrix = new Byte*[yLen];
-	for (int i = 0; i < yLen; ++i) {
-		matrix[i] = new Byte[xLen];
-		for (int j = 0; j < xLen; ++j) {
-			matrix[i][j] = 0;
-		}
-	}
-	
-	int length = y.Length() / numberOfTasks;
+	int length = yLen / numberOfTasks;
 
 	if (length == 0) { // Daca numarul e prea mic
-		if (currentRank == 0) { // il face rank 0 pe tot
+		if (currentRank == 0) { // il face procesul cu rank 0 pe tot
 			length = y.Length();
 			numberOfTasks = 1;
 		} else { // si altii se opresc
 			MPI_Finalize();
 			return EXIT_SUCCESS;
+		}
+	}
+
+	//MatrixPart matrixPart = GenerateMatrixPart(x, y);
+	//exit(EXIT_SUCCESS);
+
+	Byte** matrix = new Byte*[yLen]; //Consturim matricea de inmultire
+	for (int i = 0; i < yLen; ++i) {
+		matrix[i] = new Byte[xLen];
+		for (int j = 0; j < xLen; ++j) {
+			matrix[i][j] = 0;
 		}
 	}
 
