@@ -9,6 +9,8 @@ using namespace std;
 
 typedef unsigned char Byte;
 
+int Abs(int x, int y);
+
 class Number {
 private:
 	Byte* data;
@@ -35,19 +37,31 @@ private:
 	unsigned int length;
 	unsigned int offset;
 
-	MatrixPart& operator=(const MatrixPart& copy);
+	
 public:
-	MatrixPart(const unsigned int length, const unsigned int offset);
+	MatrixPart(const unsigned int length, const unsigned int offset = 0);
+
+	MatrixPart(const Byte* const number, const unsigned int length, const unsigned int offset = 0);
 
 	MatrixPart(const MatrixPart& copy);
 
 	~MatrixPart();
 
+	MatrixPart& operator=(const MatrixPart& copy);
+
 	unsigned int Length() const;
+
+	unsigned int GetOffset() const;
+
+	Byte*& operator*();
 
 	Byte& operator[](const int index) const;
 
-	MatrixPart& operator+(const MatrixPart& copy) const;
+	MatrixPart operator+(const MatrixPart& copy) const;
+
+	MatrixPart& operator+=(const MatrixPart& copy);
+
+	MatrixPart& Reduce();
 
 	friend ostream& operator<< (ostream& stream, const MatrixPart& number);
 };
