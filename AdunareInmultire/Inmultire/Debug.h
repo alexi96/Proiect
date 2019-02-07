@@ -3,7 +3,7 @@
 #include <conio.h>
 
 #define DEBUG(M) cout << M
-//#undef DEBUG
+#undef DEBUG
 
 #ifdef DEBUG
 void DebugPrintMatrix(Byte** matrix, int rows, int cols) {

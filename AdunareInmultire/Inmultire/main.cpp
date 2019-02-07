@@ -133,9 +133,13 @@ int main(int argc, char** argv) {
 			MatrixPart t(len, otherRankRowStart);
 			MPI_Recv(*t, t.Length(), MPI_BYTE, otherRank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);			
 			matrixPart += t;
+
+			DEBUG("Process ");
+			DEBUG(currentRank);
+			DEBUG(" recieved from ");
+			DEBUG(otherRank);
+			DEBUG(": ");
 			DEBUG(t);
-			DEBUG('\n');
-			DEBUG(matrixPart);
 			DEBUG('\n');
 		}
 	} else if (usingMpi) {

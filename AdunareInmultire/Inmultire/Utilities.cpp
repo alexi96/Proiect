@@ -84,10 +84,6 @@ ostream& operator<<(ostream& stream, const Number& number) {
 	int t;
 	for (unsigned int i = 0; i < len; ++i) {
 		t = (int) number[len - 1 - i];
-	
-		if (i == len - 1 && !t) {
-			break;
-		}
 
 		stream << t;
 	}
@@ -205,18 +201,24 @@ MatrixPart& MatrixPart::Reduce() {
 		++lastZeroes;
 	}
 	this->length -= lastZeroes;
-	if (this->length < 0) {
-		this->length = 0;
-	}
-	Byte* newData = new Byte[this->length];
-	for (unsigned int i = 0; i < this->length; ++i) {
-		newData[i] = this->data[i];
-	}
+	if (this->length <= 0) {
+		this->length = 1;
+		Byte* newData = new Byte[this->length];
+		newData[0] = 0;
 
-	delete this->data;
-	this->data = newData;
+		delete this->data;
+		this->data = newData;
+	} else {
+		Byte* newData = new Byte[this->length];
+		for (unsigned int i = 0; i < this->length; ++i) {
+			newData[i] = this->data[i];
+		}
 
-	return *this;
+		delete this->data;
+		this->data = newData;
+
+		return *this;
+	}
 }
 
 void MatrixPart::Output(ostream& stream) const {
