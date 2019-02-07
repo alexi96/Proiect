@@ -219,6 +219,20 @@ MatrixPart& MatrixPart::Reduce() {
 	return *this;
 }
 
+void MatrixPart::Output(ostream& stream) const {
+	int index = 0;
+	unsigned int len = this->Length();
+	unsigned int t;
+	for (unsigned int i = 0; i < len; ++i) {
+		t = (*this)[len - 1 - i];
+		stream << t;
+	}
+	for (unsigned int i = 0; i < this->offset; ++i) {
+		stream << '0';
+	}
+	stream << endl;
+}
+
 ostream& operator<<(ostream& stream, const MatrixPart& matrix) {
 	int index = 0;
 	unsigned int len = matrix.Length();
@@ -228,7 +242,7 @@ ostream& operator<<(ostream& stream, const MatrixPart& matrix) {
 		stream << t << ' ';
 	}
 	for (unsigned int i = 0; i < matrix.offset; ++i) {
-		cout << "0 ";
+		stream << "0 ";
 	}
 	return stream;
 }

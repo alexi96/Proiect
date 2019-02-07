@@ -15,11 +15,27 @@ int hostNameLength;
 char hostName[MPI_MAX_PROCESSOR_NAME];
 bool usingMpi = false;
 
+unsigned int LengthPerTask(unsigned int totalLength) {
+	unsigned int res = totalLength / numberOfTasks;
+	if (currentRank == 0 && totalLength % numberOfTasks != 0) {
+		res += totalLength % numberOfTasks;
+	}
+	return res;
+}
+
+unsigned int StartRow(unsigned int totalLength) {
+	unsigned int res = totalLength / numberOfTasks * currentRank;
+	if (currentRank != 0 && totalLength % numberOfTasks != 0) {
+		res += totalLength % numberOfTasks;
+	}
+	return res;
+}
+
 MatrixPart GenerateMatrixPart(Number& x, Number& y) {
 	unsigned int yLen = y.Length();
 	unsigned int xLen = x.Length();
-	unsigned int rows = y.Length() / numberOfTasks;
-	unsigned int offset = rows * currentRank;
+	unsigned int rows = LengthPerTask(y.Length());
+	unsigned int offset = StartRow(y.Length());
 	unsigned int startingRow = offset;
 
 	MatrixPart res(xLen, startingRow);
@@ -31,6 +47,12 @@ MatrixPart GenerateMatrixPart(Number& x, Number& y) {
 		}
 		MatrixPart t(data, xLen, row);
 		res += t;
+
+		DEBUG("Matrix part rank: ");
+		DEBUG(currentRank);
+		DEBUG(" : ");
+		DEBUG(res);
+		DEBUG("\n");
 	}
 
 	return res;
@@ -55,7 +77,7 @@ int main(int argc, char** argv) {
 	int strXLen = strlen(strX);
 	int strYLen = strlen(strY);
 
-	if (strXLen > strYLen) {
+	if (strXLen < strYLen) {
 		char * t = strX;
 		strX = strY;
 		strY = t;
@@ -67,8 +89,10 @@ int main(int argc, char** argv) {
 	Number x(strX);
 	Number y(strY);
 
+	DEBUG("X: ");
 	DEBUG(x);
 	DEBUG("\n");
+	DEBUG("Y: ");
 	DEBUG(y);
 	DEBUG("\n");
 
@@ -86,14 +110,16 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	if (currentRank == 0 && yLen % numberOfTasks != 0) {
-		lengthPerTask += yLen % numberOfTasks;
-	}
+	lengthPerTask = LengthPerTask(yLen);
+
+	DEBUG("Rows by rank ");
+	DEBUG(currentRank);
+	DEBUG(" : ");
+	DEBUG(lengthPerTask);
+	DEBUG("\n");
 
 	MatrixPart matrixPart = GenerateMatrixPart(x, y);
-	DEBUG(matrixPart);
-	DEBUG('\n');
-
+	
 	if (!usingMpi || currentRank == 0) {
 		// Pt fiecare rank
 		int otherRankRowStart;
@@ -112,7 +138,6 @@ int main(int argc, char** argv) {
 			DEBUG(matrixPart);
 			DEBUG('\n');
 		}
-
 	} else if (usingMpi) {
 		// Trimit catre rank 0 ce am facut eu
 		int len = matrixPart.Length();
@@ -125,7 +150,11 @@ int main(int argc, char** argv) {
 
 	MPI_Finalize();
 
-	cout << matrixPart << endl;
+	matrixPart.Output(cout);
+
+#ifdef DEBUG
+	//_getch();
+#endif // DEBUG
 
 	return EXIT_SUCCESS;
 }

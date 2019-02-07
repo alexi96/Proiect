@@ -63,6 +63,8 @@ public:
 
 	MatrixPart& Reduce();
 
+	void Output(ostream& stream) const;
+
 	friend ostream& operator<< (ostream& stream, const MatrixPart& number);
 };
 
