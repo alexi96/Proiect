@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <ctime>
+#include <ratio>
+#include <chrono>
+
 #pragma comment (lib, "msmpi.lib")
 
 #include "Utilities.h"
@@ -14,6 +18,8 @@ int currentRank;
 int hostNameLength;
 char hostName[MPI_MAX_PROCESSOR_NAME];
 bool usingMpi = false;
+
+using namespace std::chrono;
 
 unsigned int LengthPerTask(unsigned int totalLength) {
 	unsigned int res = totalLength / numberOfTasks;
@@ -118,6 +124,10 @@ int main(int argc, char** argv) {
 	DEBUG(lengthPerTask);
 	DEBUG("\n");
 
+#ifdef DEBUG
+	high_resolution_clock::time_point start = high_resolution_clock::now();
+#endif // DEBUG
+
 	MatrixPart matrixPart = GenerateMatrixPart(x, y);
 	
 	if (!usingMpi || currentRank == 0) {
@@ -153,6 +163,15 @@ int main(int argc, char** argv) {
 	}
 
 	MPI_Finalize();
+
+#ifdef DEBUG
+	high_resolution_clock::time_point end = high_resolution_clock::now();
+	duration<double, std::milli> time_span = end - start;
+#endif // DEBUG
+
+	DEBUG("Timp: ");
+	DEBUG((time_span.count()));
+	DEBUG("\n");
 
 	matrixPart.Output(cout);
 
